@@ -1,3 +1,5 @@
+require "rubygems/interned"
+
 ##
 # The Version class processes string versions into comparable
 # values. A version string should normally be a series of numbers
@@ -137,7 +139,7 @@
 #   "~> 3.5"      3.5   ... 4.0
 #   "~> 3.5.0"    3.5.0 ... 3.6
 
-class Gem::Version
+class Gem::Version < Gem::Interned
   include Comparable
 
   VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z]+)*' # :nodoc:

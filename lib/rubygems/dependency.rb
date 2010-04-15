@@ -1,9 +1,10 @@
+require "rubygems/interned"
 require "rubygems/requirement"
 
 ##
 # The Dependency class holds a Gem name and a Gem::Requirement.
 
-class Gem::Dependency
+class Gem::Dependency# < Gem::Interned
 
   # :stopdoc:
   @warned_version_requirement = false

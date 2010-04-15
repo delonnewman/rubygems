@@ -1,10 +1,11 @@
+require "rubygems/interned"
 require "rubygems/version"
 
 ##
 # A Requirement is a set of one or more version restrictions. It supports a
 # few (<tt>=, !=, >, <, >=, <=, ~></tt>) different restriction operators.
 
-class Gem::Requirement
+class Gem::Requirement < Gem::Interned
   include Comparable
 
   OPS = { #:nodoc:
@@ -150,4 +151,3 @@ end
 
 ::Gem::Version::Requirement = ::Gem::Requirement
 # :startdoc:
-
