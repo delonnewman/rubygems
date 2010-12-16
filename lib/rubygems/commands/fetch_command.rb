@@ -2,6 +2,7 @@ require 'rubygems/command'
 require 'rubygems/local_remote_options'
 require 'rubygems/version_option'
 require 'rubygems/source_info_cache'
+require 'rubygems/dependency_fetcher'
 
 class Gem::Commands::FetchCommand < Gem::Command
 
@@ -18,6 +19,11 @@ class Gem::Commands::FetchCommand < Gem::Command
     add_version_option
     add_platform_option
     add_prerelease_option
+
+    add_option '--include-dependencies',
+               'Fetch the required dependent gems.' do |value, options|
+    options[:include_dependencies] = true
+		end
   end
 
   def arguments # :nodoc:
@@ -39,27 +45,34 @@ class Gem::Commands::FetchCommand < Gem::Command
     gem_names = get_all_gem_names
 
     gem_names.each do |gem_name|
-      dep = Gem::Dependency.new gem_name, version
-      dep.prerelease = options[:prerelease]
+			if options[:include_dependencies] then
+				
+				f = Gem::DependencyFetcher.new :install_dir => Dir.pwd	
+				f.fetch gem_name, version
 
-      specs_and_sources = Gem::SpecFetcher.fetcher.fetch(dep, all, true,
-                                                         dep.prerelease?)
-
-      specs_and_sources, errors =
-        Gem::SpecFetcher.fetcher.fetch_with_errors(dep, all, true,
-                                                   dep.prerelease?)
-
-      spec, source_uri = specs_and_sources.sort_by { |s,| s.version }.last
-
-      if spec.nil? then
-        show_lookup_failure gem_name, version, errors
-        next
-      end
-
-      path = Gem::RemoteFetcher.fetcher.download spec, source_uri
-      FileUtils.mv path, spec.file_name
-
-      say "Downloaded #{spec.full_name}"
+			else
+	      dep = Gem::Dependency.new gem_name, version
+	      dep.prerelease = options[:prerelease]
+	
+	      specs_and_sources = Gem::SpecFetcher.fetcher.fetch(dep, all, true,
+	                                                         dep.prerelease?)
+	
+	      specs_and_sources, errors =
+	        Gem::SpecFetcher.fetcher.fetch_with_errors(dep, all, true,
+	                                                   dep.prerelease?)
+	
+	      spec, source_uri = specs_and_sources.sort_by { |s,| s.version }.last
+	
+	      if spec.nil? then
+	        show_lookup_failure gem_name, version, errors
+	        next
+	      end
+	
+	      path = Gem::RemoteFetcher.fetcher.download spec, source_uri
+	      FileUtils.mv path, spec.file_name
+	
+	      say "Downloaded #{spec.full_name}"
+			end
     end
   end
 
