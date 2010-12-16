@@ -5,6 +5,11 @@ require 'rubygems/spec_fetcher'
 require 'rubygems/user_interaction'
 
 ##
+# NOTE:
+# A blatant copy of dependency_installer.rb currently massaging it into form
+# evetually it would be good to abstract the common elements into a mixin
+
+##
 # Installs a gem along with all its dependencies from local and remote gems.
 
 class Gem::DependencyFetcher
