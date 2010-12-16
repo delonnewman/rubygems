@@ -73,7 +73,7 @@ class Gem::Commands::FetchCommand < Gem::Command
 				# This is something to change in Gem::DependencyFetcher 
 				dir = options[:target_dir] || Dir.pwd
 
-				f = Gem::DependencyFetcher.new :install_dir => dir
+				f = Gem::DependencyFetcher.new :install_dir => File.expand_path(dir)
 				f.fetch gem_name, version
 
 	      say "Downloaded #{spec.full_name} and it's dependencies to #{dir}"
