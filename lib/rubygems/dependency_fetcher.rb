@@ -67,7 +67,7 @@ class Gem::DependencyFetcher
 
     @installed_gems = []
 
-    @install_dir = options[:install_dir] || Gem.dir
+    @install_dir = options[:install_dir] || Dir.pwd
     @cache_dir = options[:cache_dir] || @install_dir
 
     # Set with any errors that SpecFetcher finds while search through
@@ -250,32 +250,17 @@ class Gem::DependencyFetcher
       next if @source_index.any? { |n,_| n == spec.full_name } and not last
 
       # TODO: make this sorta_verbose so other users can benefit from it
-      say "Fetching gem #{spec.full_name}" #if Gem.configuration.really_verbose
+      say "Fetching gem #{spec.full_name}" if Gem.configuration.really_verbose
 
       _, source_uri = @specs_and_sources.assoc spec
       begin
         local_gem_path = Gem::RemoteFetcher.fetcher.download spec, source_uri,
-                                                             @cache_dir
-				say "Downloaded gem to #{local_gem_path}" #if Gem.configuration.really_verbose
+                                                             @install_dir
+				say "Downloaded gem to #{local_gem_path}" if Gem.configuration.really_verbose
       rescue Gem::RemoteFetcher::FetchError
         next if @force
         raise
       end
-
-#      inst = Gem::Installer.new local_gem_path,
-#                                :bin_dir             => @bin_dir,
-#                                :development         => @development,
-#                                :env_shebang         => @env_shebang,
-#                                :force               => @force,
-#                                :format_executable   => @format_executable,
-#                                :ignore_dependencies => @ignore_dependencies,
-#                                :install_dir         => @install_dir,
-#                                :security_policy     => @security_policy,
-#                                :source_index        => @source_index,
-#                                :user_install        => @user_install,
-#                                :wrappers            => @wrappers
-#
-#      spec = inst.install
 
       @installed_gems << spec
     end
