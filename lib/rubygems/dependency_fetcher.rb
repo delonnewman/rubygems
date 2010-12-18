@@ -16,8 +16,8 @@ class Gem::DependencyFetcher
 
   include Gem::UserInteraction
 
-  attr_reader :gems_to_install
-  attr_reader :installed_gems
+  attr_reader :gems_to_fetch
+  attr_reader :fetched_gems
 
   DEFAULT_OPTIONS = {
     :env_shebang => false,
@@ -70,7 +70,7 @@ class Gem::DependencyFetcher
     @user_install = options[:user_install]
     @wrappers = options[:wrappers]
 
-    @installed_gems = []
+    @fetched_gems = []
 
     @install_dir = options[:install_dir] || Dir.pwd
     @cache_dir = options[:cache_dir] || @install_dir
@@ -171,7 +171,7 @@ class Gem::DependencyFetcher
       end
     end
 
-    @gems_to_install = dependency_list.dependency_order.reverse
+    @gems_to_fetch = dependency_list.dependency_order.reverse
   end
 
   ##
@@ -245,12 +245,12 @@ class Gem::DependencyFetcher
       @specs_and_sources = [find_gems_with_sources(dep_or_name).last]
     end
 
-    @installed_gems = []
+    @fetched_gems = []
 
     gather_dependencies
 
-    @gems_to_install.each do |spec|
-      last = spec == @gems_to_install.last
+    @gems_to_fetch.each do |spec|
+      last = spec == @gems_to_fetch.last
       # HACK is this test for full_name acceptable?
       next if @source_index.any? { |n,_| n == spec.full_name } and not last
 
@@ -267,10 +267,10 @@ class Gem::DependencyFetcher
         raise
       end
 
-      @installed_gems << spec
+      @fetched_gems << spec
     end
 
-    @installed_gems
+    @fetched_gems
   end
 
 end

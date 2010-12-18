@@ -76,6 +76,10 @@ class Gem::Commands::FetchCommand < Gem::Command
 				f = Gem::DependencyFetcher.new :install_dir => File.expand_path(dir)
 				f.fetch gem_name, version
 
+        f.fetched_gems.each do |spec|
+          say "Successfully fetched #{spec.full_name}"
+        end
+
 	      say "Downloaded #{spec.full_name} and it's dependencies to #{dir}"
 
 			else
