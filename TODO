@@ -1,0 +1,2 @@
+- Add --offline flag to install command that when given a .gem file
+  looks for the dependencies in the path of the gem.
