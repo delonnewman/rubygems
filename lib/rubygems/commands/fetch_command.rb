@@ -20,11 +20,11 @@ class Gem::Commands::FetchCommand < Gem::Command
     add_platform_option
     add_prerelease_option
 
-    add_option '--include-dependencies',
+    add_option '-y', '--include-dependencies',
                'Fetch the required dependent gems.' do |value, options|
 			options[:include_dependencies] = true
 		end
-    add_option '--target-dir DIR',
+    add_option '-t', '--target-dir DIR',
 							 'Directory to download gems.',
 							 ' for use with --include-dependencies' do |value, options|
 			options[:target_dir] = File.expand_path(value)
